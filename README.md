@@ -9,6 +9,13 @@ Everything runs on-device. Your audio never leaves your Mac (the only
 exception is the optional `--clean-up` flag, which sends the finished
 transcript text to Google Gemini using your own API key).
 
+## Pricing
+
+quicksubs includes 10 free transcriptions. Unlimited use unlocks
+automatically when the [Quick Subtitles](https://quickstuff.app) Mac app is
+installed with its one-time purchase; there is nothing separate to buy for
+the CLI.
+
 ## Install
 
 ```sh
@@ -36,6 +43,8 @@ Progress goes to stderr and results go to stdout, so it pipes cleanly. With
 {
   "audioDurationSeconds" : 1912.4,
   "cleanUp" : { "correctionsApplied" : 3, "error" : null, "requested" : true },
+  "unlocked" : true,
+  "freeUsesRemaining" : null,
   "engine" : "apple",
   "input" : "/Users/you/episode.mp3",
   "outputs" : [ "/Users/you/episode.srt" ],
@@ -51,6 +60,7 @@ Progress goes to stderr and results go to stdout, so it pipes cleanly. With
 | 1 | Bad input or usage error |
 | 2 | Transcription failed |
 | 3 | AI clean-up failed (transcript files were still written) |
+| 4 | Free transcription limit reached |
 
 Exit code 3 means your transcript is fine and on disk; only the optional AI
 pass failed, so scripts can retry just that part.
