@@ -1,7 +1,8 @@
 # quicksubs
 
 Transcribe audio and video files from your Mac's command line, using Apple's
-on-device speech engine. `quicksubs` is the CLI companion to
+on-device speech engine or, optionally, OpenAI Whisper or NVIDIA Parakeet.
+`quicksubs` is the CLI companion to
 [Quick Subtitles](https://quickstuff.app), a Mac app for turning audio and
 video into transcripts and subtitle files.
 
@@ -11,10 +12,8 @@ transcript text to Google Gemini using your own API key).
 
 ## Pricing
 
-quicksubs includes 10 free transcriptions. Unlimited use unlocks
-automatically when the [Quick Subtitles](https://quickstuff.app) Mac app is
-installed with its one-time purchase; there is nothing separate to buy for
-the CLI.
+quicksubs is completely free: unlimited transcriptions, no purchase required.
+You do not need the Quick Subtitles Mac app to use it.
 
 ## Install
 
@@ -30,6 +29,7 @@ Requires macOS 26 (Tahoe) or later.
 quicksubs episode.mp3                    # transcript next to the input as .txt
 quicksubs episode.mp3 -f srt -f vtt      # subtitle files instead
 quicksubs video.mp4 -o ~/Transcripts/    # write into a directory
+quicksubs episode.mp3 --engine whisper   # use OpenAI Whisper instead of Apple
 quicksubs episode.mp3 --clean-up         # AI pass that fixes transcription errors
 quicksubs episode.mp3 --json -q          # silent run, JSON result on stdout
 ```
@@ -43,14 +43,28 @@ Progress goes to stderr and results go to stdout, so it pipes cleanly. With
 {
   "audioDurationSeconds" : 1912.4,
   "cleanUp" : { "correctionsApplied" : 3, "error" : null, "requested" : true },
-  "unlocked" : true,
-  "freeUsesRemaining" : null,
   "engine" : "apple",
   "input" : "/Users/you/episode.mp3",
   "outputs" : [ "/Users/you/episode.srt" ],
   "wordCount" : 4321
 }
 ```
+
+## Engines
+
+Pick the speech engine with `--engine`:
+
+| Engine | Flag | Notes |
+| --- | --- | --- |
+| Apple SpeechAnalyzer | `--engine apple` (default) | On-device, no download |
+| OpenAI Whisper | `--engine whisper` | Highest accuracy, about 626 MB model |
+| NVIDIA Parakeet | `--engine parakeet` | Fastest, about 400 MB model |
+
+The first Whisper or Parakeet run downloads that engine's model once and
+reuses it on every later run. If the Quick Subtitles Mac app has already
+downloaded the model, quicksubs reuses that copy instead of downloading a
+second one. Setting `QUICKSUBS_NO_APP_SETTINGS=1` skips reusing the app's copy
+(see Configuration) and downloads quicksubs' own.
 
 ## Exit codes
 
@@ -60,7 +74,6 @@ Progress goes to stderr and results go to stdout, so it pipes cleanly. With
 | 1 | Bad input or usage error |
 | 2 | Transcription failed |
 | 3 | AI clean-up failed (transcript files were still written) |
-| 4 | Free transcription limit reached |
 
 Exit code 3 means your transcript is fine and on disk; only the optional AI
 pass failed, so scripts can retry just that part.
