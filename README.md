@@ -77,6 +77,10 @@ downloaded the model, quicksubs reuses that copy instead of downloading a
 second one. Setting `QUICKSUBS_NO_APP_SETTINGS=1` skips reusing the app's copy
 (see Configuration) and downloads quicksubs' own.
 
+Parakeet transcribes several stretches of a long file at the same time, up to
+4 depending on your Mac, and the transcript is the same either way. Set
+`QUICKSUBS_PARAKEET_CHUNKS=1` to go back to one at a time.
+
 Not sure which one to pick on your Mac? Benchmark them (see below).
 
 ## AI clean-up
