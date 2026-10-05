@@ -79,7 +79,9 @@ second one. Setting `QUICKSUBS_NO_APP_SETTINGS=1` skips reusing the app's copy
 
 Parakeet transcribes several stretches of a long file at the same time, up to
 4 depending on your Mac, and the transcript is the same either way. Set
-`QUICKSUBS_PARAKEET_CHUNKS=1` to go back to one at a time.
+`QUICKSUBS_PARAKEET_CHUNKS=1` to go back to one at a time. Long files are also
+decoded in the background while transcription is already under way; set
+`QUICKSUBS_PARAKEET_DECODE_FIRST=1` to decode the whole file first instead.
 
 Not sure which one to pick on your Mac? Benchmark them (see below).
 
